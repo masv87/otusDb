@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="shop" schema="public" type="PostgreSQL - 11.3">
+   <tables>
+      <table name="categories" numRows="0" remarks="Категории товаров. Имеется индекс по parent_id для быстрого поиска детей." schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="true" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+            <child column="parent_id" foreignKey="categories__category_parent_fk" implied="false" onDeleteCascade="false" schema="public" table="categories"/>
+            <child column="category_id" foreignKey="category_attributes_category_fk" implied="false" onDeleteCascade="false" schema="public" table="category_attributes"/>
+            <child column="category_id" foreignKey="goods_category_fk" implied="false" onDeleteCascade="false" schema="public" table="products"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="Название категории. 150 символов на всякий случай, для длинных имён" size="150" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="parent_id" nullable="true" remarks="Id родительской категории, ссылается на эту же таблицу" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="categories__category_parent_fk" implied="false" onDeleteCascade="false" schema="public" table="categories"/>
+         </column>
+         <index name="categories_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="parent_id_categories__index" unique="false">
+            <column ascending="true" name="parent_id"/>
+         </index>
+      </table>
+      <table name="category_attributes" numRows="0" remarks="Атрибуты категорий. Имеется индекс по category_id для быстрой выборки атрибутов категории" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="Имя атрибута. 150 символов на всякий зарезервировано для длинных имён" size="150" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="type" nullable="false" remarks="Тип данных, которые может принимать данная характеристика. Число, несколько значений и т.д. &#10;Тип должен уместиться не более чем в 10 символов. Выбрал varchar, а не int, чтобы можно было глядя на сырые данные сразу понять, что за тип,&#10; а не лезть в код. Это преимущество выигрывает у преимуществ инта в данном случае" size="10" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="category_id" nullable="true" remarks="Вторичный клюс на таблицу categories" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="category_attributes_category_fk" implied="false" onDeleteCascade="false" schema="public" table="categories"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="category_attributes_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="category_attributes_category_id_index" unique="false">
+            <column ascending="true" name="category_id"/>
+         </index>
+      </table>
+      <table name="clients" numRows="0" remarks="Клиенты магазина. Индекес по имени для упрощения поиска" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+            <child column="client_id" foreignKey="orders_client_fk" implied="false" onDeleteCascade="false" schema="public" table="orders"/>
+            <child column="client_id" foreignKey="recharge_transactions_client_fk" implied="false" onDeleteCascade="false" schema="public" table="recharge_transactions"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="Имя клиента. Зарезервировал 150 символов для длинных имён" size="150" type="varchar"/>
+         <column autoUpdated="false" digits="2" id="2" name="balance" nullable="true" remarks="Баланс клиента. Тип данных выбрал, как рекомендумый документацией для денежных операций. Подразумевается, что 8 знаков до и 2 знака после хватит" size="10" type="numeric"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="clients_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="clients_name_index" unique="false">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="manufacturers" numRows="0" remarks="Производители. Индекс по имени для упрощения выборок" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+            <child column="manufacturer_id" foreignKey="products_manufacturer_fk" implied="false" onDeleteCascade="false" schema="public" table="products"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="Наименование производителя. 150 символов для уверенности, что длинные имена влезут." size="150" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="manufacturers_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="manufacturers_name_index" unique="false">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="order_lists" numRows="0" remarks="Состав заказа. Индекс по id заказа для быстрой выборки товаров в заказе" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+         <column autoUpdated="false" digits="0" id="1" name="order_id" nullable="true" remarks="Ссылка на таблицу orders" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="order_lists_order__fk" implied="false" onDeleteCascade="false" schema="public" table="orders"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="product_offer_id" nullable="true" remarks="Ссылка на таблицу product_offers" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="order_lists_product_offer_fk" implied="false" onDeleteCascade="false" schema="public" table="product_offers"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="count" nullable="true" remarks="Количество товара в заказе. Всегда целое число." size="10" type="int4"/>
+         <column autoUpdated="false" digits="2" id="4" name="actual_unit_price" nullable="true" remarks="Цена за единицу на момент покупки. Тип данных выбрал, как рекомендумый документацией для денежных операций. Подразумевается, что 8 знаков до и 2 знака после хватит" size="10" type="numeric"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="order_lists_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="order_lists_order_id_index" unique="false">
+            <column ascending="true" name="order_id"/>
+         </index>
+      </table>
+      <table name="order_transactions" numRows="0" remarks="Транзакции, относящиеся к оплате заказов. Соаставной индекс по статусу и дате добавления для выборок транзакций определнного статуса по датам. Индекс по номеру заказа для быстрого получения транзакций в рамках заказа" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+         <column autoUpdated="false" digits="0" id="1" name="order_id" nullable="true" remarks="Ссылка на таблицу orders" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="order_transactions_order_fk" implied="false" onDeleteCascade="false" schema="public" table="orders"/>
+         </column>
+         <column autoUpdated="false" digits="2" id="2" name="sum" nullable="true" remarks="Сумма транзакции. Тип данных выбрал, как рекомендумый документацией для денежных операций. Подразумевается, что 8 знаков до и 2 знака после хватит" size="10" type="numeric"/>
+         <column autoUpdated="false" digits="0" id="3" name="status" nullable="true" remarks="Выбрал integer, а не enum из-за преимуществ в сортировке, меньшем месте и т.д." size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="4" name="date_created" nullable="true" remarks="Дата создания. Дата одобрения транзакции. Timestamp а не date, т.к. важно именно точное время." size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="6" id="5" name="date_accepted" nullable="true" remarks="Дата одобрения транзакции. Timestamp а не date, т.к. важно именно точное время." size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="6" id="6" name="date_canceled" nullable="true" remarks="Дата отмены транзакции. Timestamp а не date, т.к. важно именно точное время." size="35" type="timestamptz"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="order_transactions_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="order_transactions_date_created_status_index" unique="false">
+            <column ascending="true" name="date_created"/>
+            <column ascending="true" name="status"/>
+         </index>
+         <index name="order_transactions_order_index" unique="false">
+            <column ascending="true" name="order_id"/>
+         </index>
+      </table>
+      <table name="orders" numRows="0" remarks="Заказы. Индекс по client_id для быстрой выборки заказов клиента. Индекс по date_created и status для отображения заказов определенного статуса за период" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+            <child column="order_id" foreignKey="order_lists_order__fk" implied="false" onDeleteCascade="false" schema="public" table="order_lists"/>
+            <child column="order_id" foreignKey="order_transactions_order_fk" implied="false" onDeleteCascade="false" schema="public" table="order_transactions"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="client_id" nullable="true" remarks="Ссылка на таблицу clients" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="orders_client_fk" implied="false" onDeleteCascade="false" schema="public" table="clients"/>
+         </column>
+         <column autoUpdated="false" digits="6" id="2" name="date_created" nullable="true" remarks="Дата создания заказа. Timestamp а не date, т.к. важно именно точное время." size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="3" name="status" nullable="true" remarks="Статус заказа. int, а не enum, потому что преимущества int в данном случае перевешивают преимущества enum" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="4" name="date_paid" nullable="true" remarks="Дата, когда заказ полностью оплачен. Timestamp а не date, т.к. важно именно точное время." size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="6" id="5" name="date_cancelled" nullable="true" remarks="Дата отмена заказа. Timestamp а не date, т.к. важно именно точное время." size="29" type="timestamp"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="orders_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="orders_client_id_index" unique="false">
+            <column ascending="true" name="client_id"/>
+         </index>
+         <index name="orders_status_date_created_index" unique="false">
+            <column ascending="true" name="date_created"/>
+            <column ascending="true" name="status"/>
+         </index>
+      </table>
+      <table name="prices_history" numRows="0" remarks="История изменения цен. Индекс по product_offer_id для быстрой выборки истории цен по товару" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+         <column autoUpdated="false" digits="0" id="1" name="product_offer_id" nullable="true" remarks="Ссылка на таблицу  product_offers" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="prices_history_product_offer_fk" implied="false" onDeleteCascade="false" schema="public" table="product_offers"/>
+         </column>
+         <column autoUpdated="false" digits="6" id="2" name="date_start" nullable="true" remarks="Дата начала действия. Timestamp а не date, т.к. важно именно точное время." size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="6" id="3" name="date_end" nullable="true" remarks="Дата конца действия. Timestamp а не date, т.к. важно именно точное время." size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="0" id="4" name="status" nullable="true" remarks="Статус - активна, не активна и т.д." size="10" type="int4"/>
+         <column autoUpdated="false" digits="2" id="5" name="price" nullable="true" remarks="Цена на этот момент. Тип данных выбрал, как рекомендумый документацией для денежных операций. Подразумевается, что 8 знаков до и 2 знака после хватит" size="10" type="numeric"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="prices_history_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="prices_history_product_offer_index" unique="false">
+            <column ascending="true" name="product_offer_id"/>
+         </index>
+      </table>
+      <table name="product_offer_attributes" numRows="0" remarks="Значения атрибутов для конкретных товарных предложений. индекс по offer_id для быстрой выборки атрибутов товара. Составной индекс по category_attribute_id и category_attribute_value для поиска по атрибутам" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+         <column autoUpdated="false" digits="0" id="1" name="offer_id" nullable="true" remarks="Ссылка на таблицу product_offers" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="product_offer_attributes_offer_fk" implied="false" onDeleteCascade="false" schema="public" table="product_offers"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="category_attribute_id" nullable="true" remarks="Ссылка на таблцу category_attributes" size="2147483647" type="uuid"/>
+         <column autoUpdated="false" digits="0" id="3" name="category_attribute_value" nullable="true" remarks="Значение атрибута. Jsonb выбрал, потому что значение может быть любым, плюс, jsonb можно делать индексируемым, да и сами postgres его рекомендуют больше чем json" size="2147483647" type="jsonb"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="product_offer_attributes_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="product_offer_attributes_category_value_index" unique="false">
+            <column ascending="true" name="category_attribute_id"/>
+            <column ascending="true" name="category_attribute_value"/>
+         </index>
+         <index name="product_offer_attributes_offer_id_index" unique="false">
+            <column ascending="true" name="offer_id"/>
+         </index>
+      </table>
+      <table name="product_offers" numRows="0" remarks="Товарные предложения. индекс по  product_id для джойна и по price для быстрого поиска товарных предложений с определённой ценой" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+            <child column="product_offer_id" foreignKey="order_lists_product_offer_fk" implied="false" onDeleteCascade="false" schema="public" table="order_lists"/>
+            <child column="product_offer_id" foreignKey="prices_history_product_offer_fk" implied="false" onDeleteCascade="false" schema="public" table="prices_history"/>
+            <child column="offer_id" foreignKey="product_offer_attributes_offer_fk" implied="false" onDeleteCascade="false" schema="public" table="product_offer_attributes"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="product_id" nullable="true" remarks="Ссылка на таблицу products" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="product_offers_products_fk" implied="false" onDeleteCascade="false" schema="public" table="products"/>
+         </column>
+         <column autoUpdated="false" digits="2" id="2" name="price" nullable="true" remarks="Тип данных выбрал, как рекомендумый документацией для денежных операций. Подразумевается, что 8 знаков до и 2 знака после хватит" size="10" type="numeric"/>
+         <column autoUpdated="false" digits="0" id="3" name="supplier_id" nullable="true" remarks="Ссылка на таблицу suppliers" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="product_offers_supplier_fk" implied="false" onDeleteCascade="false" schema="public" table="suppliers"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="4" name="available_count" nullable="true" remarks="Доступное количество товара. Подразумевается, что число всегда целое." size="10" type="int4"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="product_offers_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="product_offers_price_index" unique="false">
+            <column ascending="true" name="price"/>
+         </index>
+         <index name="product_offers_product_index" unique="false">
+            <column ascending="true" name="product_id"/>
+         </index>
+      </table>
+      <table name="products" numRows="0" remarks="Товары. индекс по category_id для быстрого поиска товаров в категории. индексты по имени производителя и имени товара для поиска" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="true" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+            <child column="product_id" foreignKey="product_offers_products_fk" implied="false" onDeleteCascade="false" schema="public" table="product_offers"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="Наименование товара. 150 символов зарезервировано для товаров с длинным названием" size="150" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="category_id" nullable="true" remarks="Ссылка на категорию" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="goods_category_fk" implied="false" onDeleteCascade="false" schema="public" table="categories"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="manufacturer_id" nullable="true" remarks="ссылка на производителя" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="products_manufacturer_fk" implied="false" onDeleteCascade="false" schema="public" table="manufacturers"/>
+         </column>
+         <index name="goods_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="products_category_id_index" unique="false">
+            <column ascending="true" name="category_id"/>
+         </index>
+         <index name="products_manufacturer_index" unique="false">
+            <column ascending="true" name="manufacturer_id"/>
+         </index>
+         <index name="products_name_index" unique="false">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="recharge_transactions" numRows="0" remarks="Транзакции пополнения баланаса. индекс по client_id для быстрого поиска транзакций пополнения для клиента. Индекс по date_created и status для поиска транзакций по дате с определынным статусом" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+         <column autoUpdated="false" digits="0" id="1" name="client_id" nullable="true" remarks="ссылка на таблицу clients" size="2147483647" type="uuid">
+            <parent column="id" foreignKey="recharge_transactions_client_fk" implied="false" onDeleteCascade="false" schema="public" table="clients"/>
+         </column>
+         <column autoUpdated="false" digits="2" id="2" name="sum" nullable="true" remarks="Тип данных выбрал, как рекомендумый документацией для денежных операций. Подразумевается, что 8 знаков до и 2 знака после хватит" size="10" type="numeric"/>
+         <column autoUpdated="false" digits="0" id="3" name="status" nullable="true" remarks="Статус транзакции. Выбрал int из-за перевешивающих преимуществ в данном случае в сравнении с enum" size="10" type="int4"/>
+         <column autoUpdated="false" digits="6" id="4" name="date_created" nullable="true" remarks="Дата создания транзакции. Timestamp а не date, т.к. важно именно точное время." size="35" type="timestamptz"/>
+         <column autoUpdated="false" digits="6" id="5" name="date_accepted" nullable="true" remarks="Дата одобрения транзакции. Timestamp а не date, т.к. важно именно точное время." size="35" type="timestamptz"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="recharge_transactions_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="recharge_transactions_client_id_index" unique="false">
+            <column ascending="true" name="client_id"/>
+         </index>
+         <index name="recharge_transactions_date_created_status_index" unique="false">
+            <column ascending="true" name="date_created"/>
+            <column ascending="true" name="status"/>
+         </index>
+      </table>
+      <table name="suppliers" numRows="0" remarks="Поставщики. индекс по name для быстрого поиска по имени" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+            <child column="supplier_id" foreignKey="product_offers_supplier_fk" implied="false" onDeleteCascade="false" schema="public" table="product_offers"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="Наименование поставщика. 150 символов зарезервированы для длинных имён" size="150" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="suppliers_pk" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="suppliers_name_index" unique="false">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+   </tables>
+</database>

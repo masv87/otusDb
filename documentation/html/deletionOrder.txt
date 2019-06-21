@@ -1,0 +1,13 @@
+order_lists
+recharge_transactions
+product_offer_attributes
+prices_history
+order_transactions
+category_attributes
+orders
+product_offers
+products
+categories
+suppliers
+manufacturers
+clients
