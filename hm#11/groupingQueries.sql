@@ -6,7 +6,6 @@ delete   from oper_ip_tmp
               USING oper_ip_tmp AS oi
                   left join (select max(id) maxid, IP_OP, START_DATE, STOP_DATE from oper_ip_tmp group by IP_OP, START_DATE, STOP_DATE ) oit on oi.id = maxid
 where oit.maxid is null and oper_ip_tmp.id = oi.id
---     Следующий запрос уже считает стоимость звонка
 
 -- Выборка суммарного времени по странам
 select c1.country_name,
