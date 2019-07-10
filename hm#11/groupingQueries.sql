@@ -8,14 +8,14 @@ delete   from oper_ip_tmp
 where oit.maxid is null and oper_ip_tmp.id = oi.id
 
 -- Выборка суммарного времени по странам
-select c1.country_name,
+select c1.country_name, c1.country_code,
        (case when sum is null then  0
              else sum end)
 from countries c1
          left join (
     select
         sum(elapsed_time) sum,
-        country_name
+        countries.country_code
     FROM
         (SELECT
              DST_NUMBER_BILL,
@@ -53,17 +53,17 @@ from countries c1
                   )
         ORDER BY dc2.CODE DESC
         LIMIT 1
-    )  group by country_name) tmp on c1.country_name = tmp.country_name;
+    )  group by countries.country_code) tmp on c1.country_code = tmp.country_code;
 
 -- выборка кол-ва  звонков по странам
-select c1.country_name,
+select c1.country_name, c1.country_code,
        (case when count is null then  0
              else count end)
 from countries c1
          left join (
     select
         count( DST_NUMBER_BILL) count,
-        country_name
+        countries.country_code
     FROM
         (SELECT
              DST_NUMBER_BILL,
@@ -101,17 +101,17 @@ from countries c1
                   )
         ORDER BY dc2.CODE DESC
         LIMIT 1
-    )  group by country_name) tmp on c1.country_name = tmp.country_name  ;
+    )  group by countries.country_code) tmp on c1.country_code = tmp.country_code  ;
 
 -- выборка кол-ва нулевых звонков по странам
-select c1.country_name,
+select c1.country_name, c1.country_code,
        (case when count is null then  0
              else count end)
 from countries c1
          left join (
     select
         count( DST_NUMBER_BILL) count,
-        country_name
+        countries.country_code
     FROM
         (SELECT
              DST_NUMBER_BILL,
@@ -150,4 +150,4 @@ from countries c1
                   )
         ORDER BY dc2.CODE DESC
         LIMIT 1
-    )  group by country_name) tmp on c1.country_name = tmp.country_name  ;
+    )  group by countries.country_code) tmp on c1.country_code = tmp.country_code  ;
