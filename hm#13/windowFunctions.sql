@@ -47,7 +47,6 @@ create view call_price as select
                                    BILL_TIME,
                                    elapsed_time
                                FROM CDR) CDR_CTE
---         делаем по два джойна на таблицы, чтобы выгрести входящий и исходящий тарифы
                                   INNER JOIN oper_ip_tmp ip_dst ON (ip_dst.IP_OP=DST_IP)
                                   INNER JOIN SITE  s_dst ON s_dst.ID=ip_dst.OP_ID
                                   inner join operators o on (s_dst.oper_id = o.id)
