@@ -26,7 +26,7 @@ left join manufacturers m on (p.manufacturer_id = m.id)
 where p.category_id = '{category_id}';
 ```
 _Вероятные  фильтры_: 
-1. Наименование товара (p.name ilike 'search_phrase%'). Индекс имеется - products.products_name_index. 
+1. Наименование товара, полнотекстовый поиск (to_tsvector('english', name) @@ to_tsquery('english', %search_phrase%)). Индекс имеется - products.products_name_index. 
 2. По производителю. Подразумевается, что пользователь выбрал производителя из списка, поэтому испльзуем id
  (m.id = '{id}'). Индекс имеется - products_manufacturer_index
 3. По цене (po.price >= '{price_from}' and po.price <='{price_to'}). Индекс имеется  - product_offers.product_offers_price_index 

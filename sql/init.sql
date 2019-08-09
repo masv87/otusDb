@@ -56,7 +56,7 @@ create table products
 			references manufacturers
 );
 
-comment on table products is 'Товары. индекс по category_id для быстрого поиска товаров в категории. индексты по имени производителя и имени товара для поиска';
+comment on table products is 'Товары. индекс по category_id для быстрого поиска товаров в категории. индексы по имени производителя. Полнотекстовый индекс по  имени товара для поиска';
 
 comment on column products.id is 'uuid, а не int, потому что подразумевается,
 что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором';
@@ -72,8 +72,8 @@ alter table products owner to shop;
 create index products_category_id_index
 	on products (category_id);
 
-create index products_name_index
-	on products (name);
+CREATE INDEX products_name_index ON products USING GIN (to_tsvector('english', name));
+
 
 create index products_manufacturer_index
 	on products (manufacturer_id);

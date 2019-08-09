@@ -9,9 +9,9 @@ insert into categories (name, parent_id) values ('Sub Parent', (select id from c
 insert into categories (name, parent_id) values ('Child', (select id from categories where name = 'Sub Parent') );
 
 insert into products (name, category_id, manufacturer_id) values
-    ('Product1', (select id from categories where name = 'Child'), (select id from manufacturers where  name = 'Manufacturer1')),
-    ('Product2', (select id from categories where name = 'Child'), (select id from manufacturers where  name = 'Manufacturer2')),
-    ('Product3', (select id from categories where name = 'Child'), (select id from manufacturers where  name = 'Manufacturer3'));
+    ('First product, the best quality', (select id from categories where name = 'Child'), (select id from manufacturers where  name = 'Manufacturer1')),
+    ('Second product, absolutely perfect', (select id from categories where name = 'Child'), (select id from manufacturers where  name = 'Manufacturer2')),
+    ('Third product like useless stuff', (select id from categories where name = 'Child'), (select id from manufacturers where  name = 'Manufacturer3'));
 
 with attribute_info as (
     select  'Color' as name, 'string' as type, id as category_id  from categories where name ='Child' union

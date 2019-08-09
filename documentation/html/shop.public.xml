@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <database name="shop" schema="public" type="PostgreSQL - 11.3">
    <tables>
-      <table name="categories" numRows="0" remarks="Категории товаров. Имеется индекс по parent_id для быстрого поиска детей." schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="true" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+      <table name="categories" numRows="3" remarks="Категории товаров. Имеется индекс по parent_id для быстрого поиска детей." schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
             <child column="parent_id" foreignKey="categories__category_parent_fk" implied="false" onDeleteCascade="false" schema="public" table="categories"/>
             <child column="category_id" foreignKey="category_attributes_category_fk" implied="false" onDeleteCascade="false" schema="public" table="category_attributes"/>
             <child column="category_id" foreignKey="goods_category_fk" implied="false" onDeleteCascade="false" schema="public" table="products"/>
@@ -18,10 +18,10 @@
             <column ascending="true" name="parent_id"/>
          </index>
       </table>
-      <table name="category_attributes" numRows="0" remarks="Атрибуты категорий. Имеется индекс по category_id для быстрой выборки атрибутов категории" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+      <table name="category_attributes" numRows="3" remarks="Атрибуты категорий. Имеется индекс по category_id для быстрой выборки атрибутов категории" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
          <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="Имя атрибута. 150 символов на всякий зарезервировано для длинных имён" size="150" type="varchar"/>
-         <column autoUpdated="false" digits="0" id="2" name="type" nullable="false" remarks="Тип данных, которые может принимать данная характеристика. Число, несколько значений и т.д. &#10;Тип должен уместиться не более чем в 10 символов. Выбрал varchar, а не int, чтобы можно было глядя на сырые данные сразу понять, что за тип,&#10; а не лезть в код. Это преимущество выигрывает у преимуществ инта в данном случае" size="10" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="2" name="type" nullable="false" remarks="Тип данных, которые может принимать данная характеристика. Число, несколько значений и т.д.&#10;Тип должен уместиться не более чем в 10 символов. Выбрал varchar, а не int, чтобы можно было глядя на сырые данные сразу понять, что за тип,&#10; а не лезть в код. Это преимущество выигрывает у преимуществ инта в данном случае" size="10" type="varchar"/>
          <column autoUpdated="false" digits="0" id="3" name="category_id" nullable="true" remarks="Вторичный клюс на таблицу categories" size="2147483647" type="uuid">
             <parent column="id" foreignKey="category_attributes_category_fk" implied="false" onDeleteCascade="false" schema="public" table="categories"/>
          </column>
@@ -33,8 +33,8 @@
             <column ascending="true" name="category_id"/>
          </index>
       </table>
-      <table name="clients" numRows="0" remarks="Клиенты магазина. Индекес по имени для упрощения поиска" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+      <table name="clients" numRows="3" remarks="Клиенты магазина. Индекес по имени для упрощения поиска" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
             <child column="client_id" foreignKey="orders_client_fk" implied="false" onDeleteCascade="false" schema="public" table="orders"/>
             <child column="client_id" foreignKey="recharge_transactions_client_fk" implied="false" onDeleteCascade="false" schema="public" table="recharge_transactions"/>
          </column>
@@ -48,8 +48,8 @@
             <column ascending="true" name="name"/>
          </index>
       </table>
-      <table name="manufacturers" numRows="0" remarks="Производители. Индекс по имени для упрощения выборок" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+      <table name="manufacturers" numRows="3" remarks="Производители. Индекс по имени для упрощения выборок" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
             <child column="manufacturer_id" foreignKey="products_manufacturer_fk" implied="false" onDeleteCascade="false" schema="public" table="products"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="Наименование производителя. 150 символов для уверенности, что длинные имена влезут." size="150" type="varchar"/>
@@ -62,7 +62,7 @@
          </index>
       </table>
       <table name="order_lists" numRows="0" remarks="Состав заказа. Индекс по id заказа для быстрой выборки товаров в заказе" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
          <column autoUpdated="false" digits="0" id="1" name="order_id" nullable="true" remarks="Ссылка на таблицу orders" size="2147483647" type="uuid">
             <parent column="id" foreignKey="order_lists_order__fk" implied="false" onDeleteCascade="false" schema="public" table="orders"/>
          </column>
@@ -80,7 +80,7 @@
          </index>
       </table>
       <table name="order_transactions" numRows="0" remarks="Транзакции, относящиеся к оплате заказов. Соаставной индекс по статусу и дате добавления для выборок транзакций определнного статуса по датам. Индекс по номеру заказа для быстрого получения транзакций в рамках заказа" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
          <column autoUpdated="false" digits="0" id="1" name="order_id" nullable="true" remarks="Ссылка на таблицу orders" size="2147483647" type="uuid">
             <parent column="id" foreignKey="order_transactions_order_fk" implied="false" onDeleteCascade="false" schema="public" table="orders"/>
          </column>
@@ -102,7 +102,7 @@
          </index>
       </table>
       <table name="orders" numRows="0" remarks="Заказы. Индекс по client_id для быстрой выборки заказов клиента. Индекс по date_created и status для отображения заказов определенного статуса за период" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
             <child column="order_id" foreignKey="order_lists_order__fk" implied="false" onDeleteCascade="false" schema="public" table="order_lists"/>
             <child column="order_id" foreignKey="order_transactions_order_fk" implied="false" onDeleteCascade="false" schema="public" table="order_transactions"/>
          </column>
@@ -126,7 +126,7 @@
          </index>
       </table>
       <table name="prices_history" numRows="0" remarks="История изменения цен. Индекс по product_offer_id для быстрой выборки истории цен по товару" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
          <column autoUpdated="false" digits="0" id="1" name="product_offer_id" nullable="true" remarks="Ссылка на таблицу  product_offers" size="2147483647" type="uuid">
             <parent column="id" foreignKey="prices_history_product_offer_fk" implied="false" onDeleteCascade="false" schema="public" table="product_offers"/>
          </column>
@@ -142,8 +142,8 @@
             <column ascending="true" name="product_offer_id"/>
          </index>
       </table>
-      <table name="product_offer_attributes" numRows="0" remarks="Значения атрибутов для конкретных товарных предложений. индекс по offer_id для быстрой выборки атрибутов товара. Составной индекс по category_attribute_id и category_attribute_value для поиска по атрибутам" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+      <table name="product_offer_attributes" numRows="27" remarks="Значения атрибутов для конкретных товарных предложений. индекс по offer_id для быстрой выборки атрибутов товара. Составной индекс по category_attribute_id и category_attribute_value для поиска по атрибутам" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
          <column autoUpdated="false" digits="0" id="1" name="offer_id" nullable="true" remarks="Ссылка на таблицу product_offers" size="2147483647" type="uuid">
             <parent column="id" foreignKey="product_offer_attributes_offer_fk" implied="false" onDeleteCascade="false" schema="public" table="product_offers"/>
          </column>
@@ -161,8 +161,8 @@
             <column ascending="true" name="offer_id"/>
          </index>
       </table>
-      <table name="product_offers" numRows="0" remarks="Товарные предложения. индекс по  product_id для джойна и по price для быстрого поиска товарных предложений с определённой ценой" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+      <table name="product_offers" numRows="9" remarks="Товарные предложения. индекс по  product_id для джойна и по price для быстрого поиска товарных предложений с определённой ценой" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
             <child column="product_offer_id" foreignKey="order_lists_product_offer_fk" implied="false" onDeleteCascade="false" schema="public" table="order_lists"/>
             <child column="product_offer_id" foreignKey="prices_history_product_offer_fk" implied="false" onDeleteCascade="false" schema="public" table="prices_history"/>
             <child column="offer_id" foreignKey="product_offer_attributes_offer_fk" implied="false" onDeleteCascade="false" schema="public" table="product_offer_attributes"/>
@@ -186,8 +186,8 @@
             <column ascending="true" name="product_id"/>
          </index>
       </table>
-      <table name="products" numRows="0" remarks="Товары. индекс по category_id для быстрого поиска товаров в категории. индексты по имени производителя и имени товара для поиска" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="true" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+      <table name="products" numRows="3" remarks="Товары. индекс по category_id для быстрого поиска товаров в категории. индексты по имени производителя и имени товара для поиска" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
             <child column="product_id" foreignKey="product_offers_products_fk" implied="false" onDeleteCascade="false" schema="public" table="product_offers"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="Наименование товара. 150 символов зарезервировано для товаров с длинным названием" size="150" type="varchar"/>
@@ -206,12 +206,10 @@
          <index name="products_manufacturer_index" unique="false">
             <column ascending="true" name="manufacturer_id"/>
          </index>
-         <index name="products_name_index" unique="false">
-            <column ascending="true" name="name"/>
-         </index>
+         <index name="products_name_index" unique="false"/>
       </table>
-      <table name="recharge_transactions" numRows="0" remarks="Транзакции пополнения баланаса. индекс по client_id для быстрого поиска транзакций пополнения для клиента. Индекс по date_created и status для поиска транзакций по дате с определынным статусом" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
+      <table name="recharge_transactions" numRows="15" remarks="Транзакции пополнения баланаса. индекс по client_id для быстрого поиска транзакций пополнения для клиента. Индекс по date_created и status для поиска транзакций по дате с определынным статусом" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid"/>
          <column autoUpdated="false" digits="0" id="1" name="client_id" nullable="true" remarks="ссылка на таблицу clients" size="2147483647" type="uuid">
             <parent column="id" foreignKey="recharge_transactions_client_fk" implied="false" onDeleteCascade="false" schema="public" table="clients"/>
          </column>
@@ -231,8 +229,8 @@
             <column ascending="true" name="status"/>
          </index>
       </table>
-      <table name="suppliers" numRows="0" remarks="Поставщики. индекс по name для быстрого поиска по имени" schema="public" type="TABLE">
-         <column autoUpdated="false" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается, &#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
+      <table name="suppliers" numRows="3" remarks="Поставщики. индекс по name для быстрого поиска по имени" schema="public" type="TABLE">
+         <column autoUpdated="false" defaultValue="gen_random_uuid()" digits="0" id="0" name="id" nullable="false" remarks="uuid, а не int, потому что подразумевается,&#10;что проблемы с сортировкой и размером менее важны чем уникальность и защищённость от атак подбором" size="2147483647" type="uuid">
             <child column="supplier_id" foreignKey="product_offers_supplier_fk" implied="false" onDeleteCascade="false" schema="public" table="product_offers"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="Наименование поставщика. 150 символов зарезервированы для длинных имён" size="150" type="varchar"/>
